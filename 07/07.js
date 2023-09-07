@@ -28,9 +28,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     const bt = document.querySelector("button") ;
     const h2 = document.querySelector("h2") ;
 
-    //초기화
-    init(boxs) ;
-
+    
     //폭탄섞기 버튼처리
     bt.addEventListener('click', () => {
         //flage 변수 확인
@@ -39,11 +37,58 @@ document.addEventListener("DOMContentLoaded", ()=>{
             arr.sort(() => Math.random() - 0.5);
             console.log(arr) ;
 
+            //초기화
+            init(boxs) ; 
             h2.textContent = '폭탄을 피해 선택해 주세요.' ;
             h2.style.color = 'red' ;
             flag = false ;
         }
     });
  
+    //박스 클릭 처리
+    boxs.forEach( element => { 
+        element.addEventListener('click', ()=>{
+            //폭탄섞기가 되지 않았을 경우
+            if (flag) {
+                h2.textContent = '폭탄을 섞어주세요.' ;
+                h2.style.color = 'blue' ;
+                return ;
+            }
+
+            let idx = parseInt(element.textContent) ;
+            //이미지가 이미 있는 경우는 처리 안함
+            if (isNaN(idx)) return ;
+
+            //해당 위치의 숫자가 0인지 1인지 확인 
+            if (arr[idx-1] === 0) {
+                //하트
+                element.innerHTML = '<img src="./img/hart.png">';
+                //하트선택개수 
+                cnt++;
+
+                //성공처리
+                if (cnt === 8) {
+                    h2.textContent = '성공!!' ;
+                    h2.style.color = 'green' ;
+                    flag = true ;
+
+                    idx = arr.indexOf(1); 
+
+                    //document.getElementById("box"+(idx+1)).innerHTML = '<img src="./img/hart.png">';
+                    document.querySelector("#box"+(idx+1)).innerHTML = '<img src="./img/hart.png">';
+                }
+            }
+            else {
+                //폭탄
+                element.innerHTML = '<img src="./img/boom.png" width="90%">';
+                h2.textContent = '실패!! 폭탄을 섞어주세요.' ;
+                h2.style.color = 'blue' ;
+                flag = true ;
+            }
+
+            console.log(element.textContent);
+        });
+    });
+
 
 });
